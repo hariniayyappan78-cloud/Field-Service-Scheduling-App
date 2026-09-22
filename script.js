@@ -1,211 +1,135 @@
 // Field Service Scheduling App
 
-let customers = JSON.parse(localStorage.getItem("customers")) || [];
-let technicians = JSON.parse(localStorage.getItem("technicians")) || [];
-let serviceJobs = JSON.parse(localStorage.getItem("serviceJobs")) || [];
+let customers = [];
+let technicians = [];
+let jobs = [];
 
-function saveData() {
-    localStorage.setItem("customers", JSON.stringify(customers));
-    localStorage.setItem("technicians", JSON.stringify(technicians));
-    localStorage.setItem("serviceJobs", JSON.stringify(serviceJobs));
-}
-
+// --------------------
 // Add Customer
-function addCustomer() {
-    const name = document.getElementById("customerName").value.trim();
-    const phone = document.getElementById("customerPhone").value.trim();
-    const address = document.getElementById("customerAddress").value.trim();
+// --------------------
+const customerForm = document.getElementById("customerForm");
 
-    if (!name || !phone || !address) {
-        alert("Please fill all customer details.");
-        return;
-    }
+if (customerForm) {
+    customerForm.addEventListener("submit", function(event) {
+        event.preventDefault();
 
-    customers.push({
-        name: name,
-        phone: phone,
-        address: address
+        const name = document.getElementById("customerName").value;
+        const phone = document.getElementById("customerPhone").value;
+        const address = document.getElementById("customerAddress").value;
+
+        customers.push({
+            name: name,
+            phone: phone,
+            address: address
+        });
+
+        alert("Customer added successfully!");
+
+        customerForm.reset();
+        displayCustomers();
+        updateDashboard();
     });
-
-    saveData();
-
-    alert("Customer added successfully!");
-
-    document.getElementById("customerName").value = "";
-    document.getElementById("customerPhone").value = "";
-    document.getElementById("customerAddress").value = "";
-
-    displayCustomers();
-    updateDashboard();
-    loadCustomerOptions();
 }
 
+
+// --------------------
 // Add Technician
-function addTechnician() {
-    const name = document.getElementById("technicianName").value.trim();
-    const skill = document.getElementById("technicianSkill").value.trim();
+// --------------------
+const technicianForm = document.getElementById("technicianForm");
 
-    if (!name || !skill) {
-        alert("Please fill all technician details.");
-        return;
-    }
+if (technicianForm) {
+    technicianForm.addEventListener("submit", function(event) {
+        event.preventDefault();
 
-    technicians.push({
-        name: name,
-        skill: skill
+        const name = document.getElementById("technicianName").value;
+        const skill = document.getElementById("technicianSkill").value;
+
+        technicians.push({
+            name: name,
+            skill: skill
+        });
+
+        alert("Technician added successfully!");
+
+        technicianForm.reset();
+        displayTechnicians();
+        updateDashboard();
     });
-
-    saveData();
-
-    alert("Technician added successfully!");
-
-    document.getElementById("technicianName").value = "";
-    document.getElementById("technicianSkill").value = "";
-
-    displayTechnicians();
-    updateDashboard();
-    loadTechnicianOptions();
 }
 
-// Schedule Service Job
-function scheduleJob() {
-    const customerName = document.getElementById("jobCustomer").value;
-    const serviceType = document.getElementById("serviceType").value;
-    const serviceDate = document.getElementById("serviceDate").value;
-    const technicianName = document.getElementById("jobTechnician").value;
 
-    if (!customerName || !serviceType || !serviceDate || !technicianName) {
-        alert("Please fill all service job details.");
-        return;
-    }
-
-    serviceJobs.push({
-        customerName: customerName,
-        serviceType: serviceType,
-        serviceDate: serviceDate,
-        technicianName: technicianName
-    });
-
-    saveData();
-
-    alert("Service job scheduled successfully!");
-
-    document.getElementById("jobCustomer").value = "";
-    document.getElementById("serviceType").value = "";
-    document.getElementById("serviceDate").value = "";
-    document.getElementById("jobTechnician").value = "";
-
-    displayServiceJobs();
-    updateDashboard();
-}
-
+// --------------------
 // Display Customers
+// --------------------
 function displayCustomers() {
-    const list = document.getElementById("customerList");
 
-    if (!list) return;
+    const customerList = document.getElementById("customerList");
 
-    list.innerHTML = "";
+    if (!customerList) return;
 
-    customers.forEach((customer) => {
+    customerList.innerHTML = "";
+
+    customers.forEach(function(customer) {
+
         const item = document.createElement("div");
 
+        item.className = "item";
+
         item.innerHTML = `
-            <strong>${customer.name}</strong><br>
-            Phone: ${customer.phone}<br>
-            Address: ${customer.address}
-            <hr>
+            <h3>${customer.name}</h3>
+            <p>Phone: ${customer.phone}</p>
+            <p>Address: ${customer.address}</p>
         `;
 
-        list.appendChild(item);
+        customerList.appendChild(item);
     });
 }
 
+
+// --------------------
 // Display Technicians
+// --------------------
 function displayTechnicians() {
-    const list = document.getElementById("technicianList");
 
-    if (!list) return;
+    const technicianList =
+        document.getElementById("technicianList");
 
-    list.innerHTML = "";
+    if (!technicianList) return;
 
-    technicians.forEach((technician) => {
+    technicianList.innerHTML = "";
+
+    technicians.forEach(function(technician) {
+
         const item = document.createElement("div");
 
-        item.innerHTML = `
-            <strong>${technician.name}</strong><br>
-            Skill: ${technician.skill}
-            <hr>
-        `;
-
-        list.appendChild(item);
-    });
-}
-
-// Display Service Jobs
-function displayServiceJobs() {
-    const list = document.getElementById("serviceJobList");
-
-    if (!list) return;
-
-    list.innerHTML = "";
-
-    serviceJobs.forEach((job) => {
-        const item = document.createElement("div");
+        item.className = "item";
 
         item.innerHTML = `
-            <strong>Customer:</strong> ${job.customerName}<br>
-            <strong>Service:</strong> ${job.serviceType}<br>
-            <strong>Date:</strong> ${job.serviceDate}<br>
-            <strong>Technician:</strong> ${job.technicianName}
-            <hr>
+            <h3>${technician.name}</h3>
+            <p>Skill: ${technician.skill}</p>
         `;
 
-        list.appendChild(item);
+        technicianList.appendChild(item);
     });
 }
 
-// Load Customer Dropdown
-function loadCustomerOptions() {
-    const select = document.getElementById("jobCustomer");
 
-    if (!select) return;
-
-    select.innerHTML = `<option value="">Select Customer</option>`;
-
-    customers.forEach((customer) => {
-        const option = document.createElement("option");
-
-        option.value = customer.name;
-        option.textContent = customer.name;
-
-        select.appendChild(option);
-    });
-}
-
-// Load Technician Dropdown
-function loadTechnicianOptions() {
-    const select = document.getElementById("jobTechnician");
-
-    if (!select) return;
-
-    select.innerHTML = `<option value="">Select Technician</option>`;
-
-    technicians.forEach((technician) => {
-        const option = document.createElement("option");
-
-        option.value = technician.name;
-        option.textContent = technician.name;
-
-        select.appendChild(option);
-    });
-}
-
-// Dashboard
+// --------------------
+// Update Dashboard
+// --------------------
 function updateDashboard() {
-    const customerCount = document.getElementById("customerCount");
-    const technicianCount = document.getElementById("technicianCount");
-    const serviceJobCount = document.getElementById("serviceJobCount");
+
+    const customerCount =
+        document.getElementById("customerCount");
+
+    const technicianCount =
+        document.getElementById("technicianCount");
+
+    const jobCount =
+        document.getElementById("jobCount");
+
+    const completedCount =
+        document.getElementById("completedCount");
 
     if (customerCount) {
         customerCount.textContent = customers.length;
@@ -215,19 +139,22 @@ function updateDashboard() {
         technicianCount.textContent = technicians.length;
     }
 
-    if (serviceJobCount) {
-        serviceJobCount.textContent = serviceJobs.length;
+    if (jobCount) {
+        jobCount.textContent = jobs.length;
+    }
+
+    if (completedCount) {
+        completedCount.textContent =
+            jobs.filter(function(job) {
+                return job.status === "Completed";
+            }).length;
     }
 }
 
-// Run when page loads
-document.addEventListener("DOMContentLoaded", function () {
-    displayCustomers();
-    displayTechnicians();
-    displayServiceJobs();
 
-    loadCustomerOptions();
-    loadTechnicianOptions();
-
+// --------------------
+// Welcome Message
+// --------------------
+window.addEventListener("load", function() {
     updateDashboard();
 });
