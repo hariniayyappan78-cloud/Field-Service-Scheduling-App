@@ -14,7 +14,7 @@
     <!-- Header -->
     <header>
         <h1>Field Service Scheduling App</h1>
-        <p>Manage Customers, Technicians and Service Jobs</p>
+        <p>Manage your field service easily</p>
     </header>
 
     <!-- Navigation -->
@@ -25,7 +25,6 @@
         <a href="#jobs">Service Jobs</a>
     </nav>
 
-    <!-- Main Content -->
     <main>
 
         <!-- Dashboard -->
@@ -59,4 +58,127 @@
 
 
         <!-- Customers -->
-        <
+        <section id="customers">
+            <h2>Customer Details</h2>
+
+            <form id="customerForm">
+
+                <label>Customer Name</label>
+                <input
+                    type="text"
+                    id="customerName"
+                    placeholder="Enter customer name"
+                    required
+                >
+
+                <label>Phone Number</label>
+                <input
+                    type="tel"
+                    id="customerPhone"
+                    placeholder="Enter phone number"
+                    required
+                >
+
+                <label>Address</label>
+                <textarea
+                    id="customerAddress"
+                    placeholder="Enter customer address"
+                    required
+                ></textarea>
+
+                <button type="submit">Add Customer</button>
+
+            </form>
+
+            <div id="customerList"></div>
+        </section>
+
+
+        <!-- Technicians -->
+        <section id="technicians">
+            <h2>Technician Details</h2>
+
+            <form id="technicianForm">
+
+                <label>Technician Name</label>
+                <input
+                    type="text"
+                    id="technicianName"
+                    placeholder="Enter technician name"
+                    required
+                >
+
+                <label>Skill</label>
+                <input
+                    type="text"
+                    id="technicianSkill"
+                    placeholder="Enter technician skill"
+                    required
+                >
+
+                <button type="submit">Add Technician</button>
+
+            </form>
+
+            <div id="technicianList"></div>
+        </section>
+
+
+        <!-- Service Jobs -->
+        <section id="jobs">
+            <h2>Service Jobs</h2>
+
+            <form id="jobForm">
+
+                <label>Customer Name</label>
+                <input
+                    type="text"
+                    id="jobCustomer"
+                    placeholder="Enter customer name"
+                    required
+                >
+
+                <label>Service Type</label>
+                <input
+                    type="text"
+                    id="serviceType"
+                    placeholder="Enter service type"
+                    required
+                >
+
+                <label>Service Date</label>
+                <input
+                    type="date"
+                    id="serviceDate"
+                    required
+                >
+
+                <label>Technician</label>
+                <input
+                    type="text"
+                    id="jobTechnician"
+                    placeholder="Enter technician name"
+                    required
+                >
+
+                <button type="submit">Schedule Job</button>
+
+            </form>
+
+            <div id="jobList"></div>
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 Field Service Scheduling App</p>
+    </footer>
+
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+
+</body>
+</html>
