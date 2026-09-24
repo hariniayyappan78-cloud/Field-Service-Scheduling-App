@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Field Service Scheduling App</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>Field Service Scheduling App</h1>
+        <p>Manage your field service easily</p>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#customers">Customers</a>
+        <a href="#technicians">Technicians</a>
+        <a href="#jobs">Service Jobs</a>
+    </nav>
+
+    <main>
+
+        <!-- Dashboard -->
+        <section id="dashboard">
+            <h2>Dashboard</h2>
+
+            <div class="dashboard-cards">
+
+                <div class="card">
+                    <h3>Customers</h3>
+                    <p id="customerCount">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Technicians</h3>
+                    <p id="technicianCount">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Service Jobs</h3>
+                    <p id="jobCount">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Completed Jobs</h3>
+                    <p id="completedCount">0</p>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- Customers -->
+        <section id="customers">
+            <h2>Customer Details</h2>
+
+            <form id="customerForm">
+
+                <label>Customer Name</label>
+                <input
+                    type="text"
+                    id="customerName"
+                    placeholder="Enter customer name"
+                    required
+                >
+
+                <label>Phone Number</label>
+                <input
+                    type="tel"
+                    id="customerPhone"
+                    placeholder="Enter phone number"
+                    required
+                >
+
+                <label>Address</label>
+                <textarea
+                    id="customerAddress"
+                    placeholder="Enter customer address"
+                    required
+                ></textarea>
+
+                <button type="submit">Add Customer</button>
+
+            </form>
+
+            <div id="customerList"></div>
+        </section>
+
+
+        <!-- Technicians -->
+        <section id="technicians">
+            <h2>Technician Details</h2>
+
+            <form id="technicianForm">
+
+                <label>Technician Name</label>
+                <input
+                    type="text"
+                    id="technicianName"
+                    placeholder="Enter technician name"
+                    required
+                >
+
+                <label>Skill</label>
+                <input
+                    type="text"
+                    id="technicianSkill"
+                    placeholder="Enter technician skill"
+                    required
+                >
+
+                <button type="submit">Add Technician</button>
+
+            </form>
+
+            <div id="technicianList"></div>
+        </section>
+
+
+        <!-- Service Jobs -->
+        <section id="jobs">
+            <h2>Service Jobs</h2>
+
+            <form id="jobForm">
+
+                <label>Customer Name</label>
+                <input
+                    type="text"
+                    id="jobCustomer"
+                    placeholder="Enter customer name"
+                    required
+                >
+
+                <label>Service Type</label>
+                <input
+                    type="text"
+                    id="serviceType"
+                    placeholder="Enter service type"
+                    required
+                >
+
+                <label>Service Date</label>
+                <input
+                    type="date"
+                    id="serviceDate"
+                    required
+                >
+
+                <label>Technician</label>
+                <input
+                    type="text"
+                    id="jobTechnician"
+                    placeholder="Enter technician name"
+                    required
+                >
+
+                <button type="submit">Schedule Job</button>
+
+            </form>
+
+            <div id="jobList"></div>
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 Field Service Scheduling App</p>
+    </footer>
+
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+
+</body>
+</html>
