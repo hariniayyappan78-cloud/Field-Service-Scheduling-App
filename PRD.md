@@ -1,162 +1,124 @@
-Product Requirements Document (PRD)
-
-Field Service Scheduling App
-
-1. Product Overview
-
-The Field Service Scheduling App is a web application that helps service companies manage technicians, customers, service jobs, and appointments from one place. It reduces manual scheduling and helps track job progress.
-
-2. Problem Statement
-
-Field service teams may face problems such as:
-
-Manual appointment scheduling
-
-Technician availability conflicts
-
-Difficulty tracking job status
-
-Customer information being scattered
-
-Delays in assigning service jobs
+\# Product Requirements Document - Field Service Scheduling App
 
 
-3. Objectives
 
-Schedule service appointments easily
-
-Assign jobs to available technicians
-
-Manage customer and technician details
-
-Track service-job progress
-
-Reduce scheduling conflicts
-
-Provide a simple dashboard for management
+1\. Product Overview
 
 
-4. Target Users
 
-User	Purpose
-
-Admin	Manage the complete system
-Technician	View and update assigned jobs
-Customer	Request and view service appointments
+The Field Service Scheduling App is a web-based application designed to manage customers, technicians, and service jobs efficiently in one place.
 
 
-5. Key Features
 
-Admin
+2\. Objective
 
-Login
+
+
+The main objective of this application is to simplify field service management by allowing users to add customers, manage technicians, schedule service jobs, and track completed jobs.
+
+
+
+3\. Target Users
+
+
+
+\- Service coordinators
+
+\- Field service teams
+
+\- Small service businesses
+
+
+
+4\. Main Features
+
+
+
+Customer Management
+
+
+
+\- Add customer details
+
+\- Edit customer details
+
+\- Delete customer details
+
+\- View customer information
+
+
+
+Technician Management
+
+
+
+\- Add technician details
+
+\- View technician information
+
+\- Assign technicians to service jobs
+
+
+
+Service Job Management
+
+
+
+\- Create service jobs
+
+\- Select customers
+
+\- Select technicians
+
+\- Set service dates
+
+\- Track completed jobs
+
+
 
 Dashboard
 
-Add/edit/delete technicians
-
-Add/manage customers
-
-Create service jobs
-
-Assign technicians
-
-Schedule appointments
-
-Track job status
 
 
-Technician
+\- Display total customers
 
-Login
+\- Display total technicians
 
-View assigned jobs
+\- Display scheduled services
 
-View appointment details
-
-Update job status
-
-Add service notes
+\- Display completed services
 
 
-Customer
 
-Register/login
-
-Create service request
-
-Select preferred appointment
-
-View appointment status
-
-View service history
+5\. Technologies Used
 
 
-6. Job Status
 
-The application should support:
+\- HTML
 
-Pending → Assigned → Scheduled → In Progress → Completed → Cancelled
+\- CSS
 
-7. Technology Stack
+\- JavaScript
 
-Frontend: HTML, CSS, JavaScript
+\- Node.js
 
-Backend: Python Flask
+\- Express.js
 
-Database: SQLite
-
-Version Control: GitHub
+\- SQLite
 
 
-8. Main Database Tables
 
-Users
-
-Customers
-
-Technicians
-
-Service Jobs
-
-Appointments
-
-Service Notes
+6\. Backend
 
 
-9. Basic Workflow
 
-Customer creates request → Admin reviews request → Technician assigned → Appointment scheduled → Technician completes job → Status updated → Customer views completion
-
-10. Non-Functional Requirements
-
-Simple and user-friendly interface
-
-Secure login
-
-Fast response
-
-Mobile-friendly design
-
-Data validation
-
-Reliable database storage
+The backend provides APIs for managing customers, technicians, and service jobs. Express.js is used to create the server and SQLite is used for data storage.
 
 
-11. Success Criteria
 
-The application should allow an admin to create a service job, assign an available technician, schedule an appointment, and track the job until completion.
+7\. Expected Outcome
 
-12. Future Enhancements
 
-Email/SMS notifications
 
-Google Maps integration
+The application provides a simple and efficient way to organize customer information, technician details, service schedules, and completed jobs through a single system.
 
-Online payment
-
-Technician location tracking
-
-Customer ratings and feedback
-
-Automatic technician assignment
