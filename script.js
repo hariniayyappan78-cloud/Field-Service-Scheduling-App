@@ -3,6 +3,9 @@ let technicianCount = 0;
 let jobCount = 0;
 let completedCount = 0;
 
+// Render Backend URL
+const API_BASE = "https://field-service-scheduling-app-1.onrender.com";
+
 
 // ==================== CUSTOMER ====================
 
@@ -20,13 +23,17 @@ document.getElementById("customerForm").addEventListener("submit", async functio
     };
 
     try {
-        const response = await fetch("http://localhost:3000/api/customers", {
+        const response = await fetch(`${API_BASE}/api/customers`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(customer)
         });
+
+        if (!response.ok) {
+            throw new Error("Customer request failed");
+        }
 
         const data = await response.json();
 
@@ -47,6 +54,7 @@ document.getElementById("customerForm").addEventListener("submit", async functio
         document.getElementById("customerList").appendChild(customerItem);
 
         customerItem.querySelector(".edit-customer").addEventListener("click", function() {
+
             let newName = prompt("Enter new customer name:", name);
             if (newName === null) return;
 
@@ -72,24 +80,33 @@ document.getElementById("customerForm").addEventListener("submit", async functio
         });
 
         customerItem.querySelector(".delete-customer").addEventListener("click", function() {
+
             customerItem.remove();
+
             customerCount--;
+
             document.getElementById("customerCount").innerText = customerCount;
         });
 
         alert(data.message);
+
         document.getElementById("customerForm").reset();
 
     } catch (error) {
-        alert("Customer could not be added. Make sure the backend server is running.");
+
+        alert("Customer could not be added. Please try again.");
+
         console.error(error);
     }
 });
 
 
-// ==================== TECHNICIAN ====================
+// ====================
+// TECHNICIAN
+// ====================
 
 document.getElementById("technicianForm").addEventListener("submit", async function(event) {
+
     event.preventDefault();
 
     let name = document.getElementById("technicianName").value;
@@ -101,7 +118,8 @@ document.getElementById("technicianForm").addEventListener("submit", async funct
     };
 
     try {
-        const response = await fetch("http://localhost:3000/api/technicians", {
+
+        const response = await fetch(`${API_BASE}/api/technicians`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -109,10 +127,16 @@ document.getElementById("technicianForm").addEventListener("submit", async funct
             body: JSON.stringify(technician)
         });
 
+        if (!response.ok) {
+            throw new Error("Technician request failed");
+        }
+
         const data = await response.json();
 
         technicianCount++;
-        document.getElementById("technicianCount").innerText = technicianCount;
+
+        document.getElementById("technicianCount").innerText =
+            technicianCount;
 
         document.getElementById("technicianList").innerHTML += `
             <div class="item">
@@ -122,18 +146,24 @@ document.getElementById("technicianForm").addEventListener("submit", async funct
         `;
 
         alert(data.message);
+
         document.getElementById("technicianForm").reset();
 
     } catch (error) {
-        alert("Technician could not be added. Make sure the backend server is running.");
+
+        alert("Technician could not be added. Please try again.");
+
         console.error(error);
     }
 });
 
 
-// ==================== SERVICE JOB ====================
+// ====================
+// SERVICE JOB
+// ====================
 
 document.getElementById("jobForm").addEventListener("submit", async function(event) {
+
     event.preventDefault();
 
     let customer = document.getElementById("jobCustomer").value;
@@ -150,7 +180,8 @@ document.getElementById("jobForm").addEventListener("submit", async function(eve
     };
 
     try {
-        const response = await fetch("http://localhost:3000/api/jobs", {
+
+        const response = await fetch(`${API_BASE}/api/jobs`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -158,20 +189,34 @@ document.getElementById("jobForm").addEventListener("submit", async function(eve
             body: JSON.stringify(job)
         });
 
+        if (!response.ok) {
+            throw new Error("Job request failed");
+        }
+
         const data = await response.json();
 
         jobCount++;
-        document.getElementById("jobCount").innerText = jobCount;
+
+        document.getElementById("jobCount").innerText =
+            jobCount;
 
         let jobItem = document.createElement("div");
+
         jobItem.className = "item";
 
         jobItem.innerHTML = `
             <h3>${service}</h3>
+
             <p><strong>Customer:</strong> ${customer}</p>
+
             <p><strong>Date:</strong> ${date}</p>
+
             <p><strong>Technician:</strong> ${technician}</p>
-            <p><strong>Status:</strong> <span class="job-status">Scheduled</span></p>
+
+            <p>
+                <strong>Status:</strong>
+                <span class="job-status">Scheduled</span>
+            </p>
 
             <button type="button" class="complete-job">
                 Mark as Completed
@@ -181,23 +226,30 @@ document.getElementById("jobForm").addEventListener("submit", async function(eve
         document.getElementById("jobList").appendChild(jobItem);
 
         jobItem.querySelector(".complete-job").addEventListener("click", function() {
+
             completedCount++;
 
-            document.getElementById("completedCount").innerText = completedCount;
+            document.getElementById("completedCount").innerText =
+                completedCount;
 
-            jobItem.querySelector(".job-status").innerText = "Completed";
+            jobItem.querySelector(".job-status").innerText =
+                "Completed";
 
             this.innerText = "Completed";
+
             this.disabled = true;
 
             alert("Job marked as completed!");
         });
 
         alert(data.message);
+
         document.getElementById("jobForm").reset();
 
     } catch (error) {
-        alert("Service job could not be scheduled. Make sure the backend server is running.");
+
+        alert("Service job could not be scheduled. Please try again.");
+
         console.error(error);
     }
 });
