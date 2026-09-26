@@ -1,26 +1,38 @@
-let customerCount = 0;
-let technicianCount = 0;
-let jobCount = 0;
-let completedCount = 0;
+// Field Service Scheduling App
 
+let customers = [];
+let technicians = [];
+let jobs = [];
 
-// ==================== CUSTOMER ====================
+// API URLs
+const CUSTOMER_API = "/api/customers";
+const TECHNICIAN_API = "/api/technicians";
+const JOB_API = "/api/jobs";
 
-document.getElementById("customerForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
+// ====================
+// CUSTOMER
+// ====================
 
-    let name = document.getElementById("customerName").value;
-    let phone = document.getElementById("customerPhone").value;
-    let address = document.getElementById("customerAddress").value;
+async function addCustomer() {
+    const name = document.getElementById("customerName").value;
+    const phone = document.getElementById("customerPhone").value;
+    const address = document.getElementById("customerAddress").value;
+    const service = document.getElementById("serviceRequirement").value;
+
+    if (!name || !phone || !address || !service) {
+        alert("Please fill all customer details.");
+        return;
+    }
 
     const customer = {
         name: name,
         phone: phone,
-        address: address
+        address: address,
+        service: service
     };
 
     try {
-        const response = await fetch("http://localhost:3000/api/customers", {
+        const response = await fetch(CUSTOMER_API, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -30,70 +42,127 @@ document.getElementById("customerForm").addEventListener("submit", async functio
 
         const data = await response.json();
 
-        customerCount++;
-        document.getElementById("customerCount").innerText = customerCount;
+        if (!response.ok) {
+            throw new Error(data.message || "Customer could not be added");
+        }
 
-        let customerItem = document.createElement("div");
-        customerItem.className = "item";
+        alert("Customer added successfully!");
 
-        customerItem.innerHTML = `
-            <h3>${name}</h3>
-            <p><strong>Phone:</strong> ${phone}</p>
-            <p><strong>Address:</strong> ${address}</p>
-            <button type="button" class="edit-customer">Edit Customer</button>
-            <button type="button" class="delete-customer">Delete Customer</button>
-        `;
+        document.getElementById("customerName").value = "";
+        document.getElementById("customerPhone").value = "";
+        document.getElementById("customerAddress").value = "";
+        document.getElementById("serviceRequirement").value = "";
 
-        document.getElementById("customerList").appendChild(customerItem);
-
-        customerItem.querySelector(".edit-customer").addEventListener("click", function() {
-            let newName = prompt("Enter new customer name:", name);
-            if (newName === null) return;
-
-            let newPhone = prompt("Enter new phone number:", phone);
-            if (newPhone === null) return;
-
-            let newAddress = prompt("Enter new address:", address);
-            if (newAddress === null) return;
-
-            customerItem.querySelector("h3").innerText = newName;
-
-            customerItem.querySelector("p:nth-of-type(1)").innerHTML =
-                `<strong>Phone:</strong> ${newPhone}`;
-
-            customerItem.querySelector("p:nth-of-type(2)").innerHTML =
-                `<strong>Address:</strong> ${newAddress}`;
-
-            name = newName;
-            phone = newPhone;
-            address = newAddress;
-
-            alert("Customer updated successfully!");
-        });
-
-        customerItem.querySelector(".delete-customer").addEventListener("click", function() {
-            customerItem.remove();
-            customerCount--;
-            document.getElementById("customerCount").innerText = customerCount;
-        });
-
-        alert(data.message);
-        document.getElementById("customerForm").reset();
+        loadCustomers();
 
     } catch (error) {
-        alert("Customer could not be added. Make sure the backend server is running.");
         console.error(error);
+        alert("Could not add customer. Please try again.");
     }
-});
+}
 
 
-// ==================== TECHNICIAN ====================
+// ====================
+// LOAD CUSTOMERS
+// ====================
 
-document.getElementById("technicianForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
+async function loadCustomers() {
+    try {
+        const response = await fetch(CUSTOMER_API);
+        customers = await response.json();
 
-    let name = document.getElementById("technicianName").value;
-    let skill = document.getElementById("technicianSkill").value;
+        displayCustomers();
+        updateDashboard();
+
+    } catch (error) {
+        console.error("Error loading customers:", error);
+    }
+}
+
+
+// ====================
+// DISPLAY CUSTOMERS
+// ====================
+
+function displayCustomers() {
+    const list = document.getElementById("customerList");
+
+    if (!list) return;
+
+    list.innerHTML = "";
+
+    customers.forEach((customer, index) => {
+        const div = document.createElement("div");
+
+        div.innerHTML = `
+            <strong>${customer.name}</strong><br>
+            Phone: ${customer.phone}<br>
+            Address: ${customer.address}<br>
+            Service: ${customer.service || ""}<br>
+            <button onclick="editCustomer(${index})">Edit</button>
+            <button onclick="deleteCustomer(${index})">Delete</button>
+            <hr>
+        `;
+
+        list.appendChild(div);
+    });
+}
+
+
+// ====================
+// EDIT CUSTOMER
+// ====================
+
+function editCustomer(index) {
+    const customer = customers[index];
+
+    const name = prompt("Customer Name:", customer.name);
+    if (name === null) return;
+
+    const phone = prompt("Phone Number:", customer.phone);
+    if (phone === null) return;
+
+    const address = prompt("Address:", customer.address);
+    if (address === null) return;
+
+    customer.name = name;
+    customer.phone = phone;
+    customer.address = address;
+
+    alert("Customer updated successfully!");
+
+    displayCustomers();
+}
+
+
+// ====================
+// DELETE CUSTOMER
+// ====================
+
+function deleteCustomer(index) {
+    if (confirm("Are you sure you want to delete this customer?")) {
+        customers.splice(index, 1);
+
+        displayCustomers();
+        updateDashboard();
+
+        alert("Customer deleted successfully!");
+    }
+}
+
+
+// ====================
+// TECHNICIAN
+// ====================
+
+async function addTechnician() {
+    const name = document.getElementById("technicianName").value;
+    const skill = document.getElementById("technicianSkill").value;
+
+    if (!name || !skill) {
+        alert("Please fill all technician details.");
+        return;
+    }
 
     const technician = {
         name: name,
@@ -101,7 +170,7 @@ document.getElementById("technicianForm").addEventListener("submit", async funct
     };
 
     try {
-        const response = await fetch("http://localhost:3000/api/technicians", {
+        const response = await fetch(TECHNICIAN_API, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -111,46 +180,92 @@ document.getElementById("technicianForm").addEventListener("submit", async funct
 
         const data = await response.json();
 
-        technicianCount++;
-        document.getElementById("technicianCount").innerText = technicianCount;
+        if (!response.ok) {
+            throw new Error(data.message || "Technician could not be added");
+        }
 
-        document.getElementById("technicianList").innerHTML += `
-            <div class="item">
-                <h3>${name}</h3>
-                <p><strong>Skill:</strong> ${skill}</p>
-            </div>
-        `;
+        alert("Technician added successfully!");
 
-        alert(data.message);
-        document.getElementById("technicianForm").reset();
+        document.getElementById("technicianName").value = "";
+        document.getElementById("technicianSkill").value = "";
+
+        loadTechnicians();
 
     } catch (error) {
-        alert("Technician could not be added. Make sure the backend server is running.");
         console.error(error);
+        alert("Could not add technician. Please try again.");
     }
-});
+}
 
 
-// ==================== SERVICE JOB ====================
+// ====================
+// LOAD TECHNICIANS
+// ====================
 
-document.getElementById("jobForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
+async function loadTechnicians() {
+    try {
+        const response = await fetch(TECHNICIAN_API);
+        technicians = await response.json();
 
-    let customer = document.getElementById("jobCustomer").value;
-    let service = document.getElementById("serviceType").value;
-    let date = document.getElementById("serviceDate").value;
-    let technician = document.getElementById("jobTechnician").value;
+        displayTechnicians();
+        updateDashboard();
+
+    } catch (error) {
+        console.error("Error loading technicians:", error);
+    }
+}
+
+
+// ====================
+// DISPLAY TECHNICIANS
+// ====================
+
+function displayTechnicians() {
+    const list = document.getElementById("technicianList");
+
+    if (!list) return;
+
+    list.innerHTML = "";
+
+    technicians.forEach((technician) => {
+        const div = document.createElement("div");
+
+        div.innerHTML = `
+            <strong>${technician.name}</strong><br>
+            Skill: ${technician.skill}
+            <hr>
+        `;
+
+        list.appendChild(div);
+    });
+}
+
+
+// ====================
+// SERVICE JOB
+// ====================
+
+async function addJob() {
+    const customer = document.getElementById("jobCustomer").value;
+    const serviceType = document.getElementById("jobServiceType").value;
+    const serviceDate = document.getElementById("jobDate").value;
+    const technician = document.getElementById("jobTechnician").value;
+
+    if (!customer || !serviceType || !serviceDate || !technician) {
+        alert("Please fill all service job details.");
+        return;
+    }
 
     const job = {
         customer: customer,
-        service: service,
-        date: date,
+        serviceType: serviceType,
+        serviceDate: serviceDate,
         technician: technician,
-        status: "Scheduled"
+        status: "Completed"
     };
 
     try {
-        const response = await fetch("http://localhost:3000/api/jobs", {
+        const response = await fetch(JOB_API, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -160,44 +275,107 @@ document.getElementById("jobForm").addEventListener("submit", async function(eve
 
         const data = await response.json();
 
-        jobCount++;
-        document.getElementById("jobCount").innerText = jobCount;
+        if (!response.ok) {
+            throw new Error(data.message || "Service job could not be scheduled");
+        }
 
-        let jobItem = document.createElement("div");
-        jobItem.className = "item";
+        alert("Service job scheduled successfully!");
 
-        jobItem.innerHTML = `
-            <h3>${service}</h3>
-            <p><strong>Customer:</strong> ${customer}</p>
-            <p><strong>Date:</strong> ${date}</p>
-            <p><strong>Technician:</strong> ${technician}</p>
-            <p><strong>Status:</strong> <span class="job-status">Scheduled</span></p>
+        document.getElementById("jobCustomer").value = "";
+        document.getElementById("jobServiceType").value = "";
+        document.getElementById("jobDate").value = "";
+        document.getElementById("jobTechnician").value = "";
 
-            <button type="button" class="complete-job">
-                Mark as Completed
-            </button>
-        `;
-
-        document.getElementById("jobList").appendChild(jobItem);
-
-        jobItem.querySelector(".complete-job").addEventListener("click", function() {
-            completedCount++;
-
-            document.getElementById("completedCount").innerText = completedCount;
-
-            jobItem.querySelector(".job-status").innerText = "Completed";
-
-            this.innerText = "Completed";
-            this.disabled = true;
-
-            alert("Job marked as completed!");
-        });
-
-        alert(data.message);
-        document.getElementById("jobForm").reset();
+        loadJobs();
 
     } catch (error) {
-        alert("Service job could not be scheduled. Make sure the backend server is running.");
         console.error(error);
+        alert("Could not schedule service job. Please try again.");
     }
+}
+
+
+// ====================
+// LOAD JOBS
+// ====================
+
+async function loadJobs() {
+    try {
+        const response = await fetch(JOB_API);
+        jobs = await response.json();
+
+        displayJobs();
+        updateDashboard();
+
+    } catch (error) {
+        console.error("Error loading jobs:", error);
+    }
+}
+
+
+// ====================
+// DISPLAY JOBS
+// ====================
+
+function displayJobs() {
+    const list = document.getElementById("jobList");
+
+    if (!list) return;
+
+    list.innerHTML = "";
+
+    jobs.forEach((job) => {
+        const div = document.createElement("div");
+
+        div.innerHTML = `
+            <strong>Customer:</strong> ${job.customer}<br>
+            <strong>Service:</strong> ${job.serviceType}<br>
+            <strong>Date:</strong> ${job.serviceDate}<br>
+            <strong>Technician:</strong> ${job.technician}<br>
+            <strong>Status:</strong> ${job.status || "Scheduled"}
+            <hr>
+        `;
+
+        list.appendChild(div);
+    });
+}
+
+
+// ====================
+// DASHBOARD
+// ====================
+
+function updateDashboard() {
+    const customerCount = document.getElementById("customerCount");
+    const technicianCount = document.getElementById("technicianCount");
+    const scheduledCount = document.getElementById("scheduledCount");
+    const completedCount = document.getElementById("completedCount");
+
+    if (customerCount) {
+        customerCount.textContent = customers.length;
+    }
+
+    if (technicianCount) {
+        technicianCount.textContent = technicians.length;
+    }
+
+    if (scheduledCount) {
+        scheduledCount.textContent = jobs.length;
+    }
+
+    if (completedCount) {
+        completedCount.textContent =
+            jobs.filter(job => job.status === "Completed").length;
+    }
+}
+
+
+// ====================
+// PAGE LOAD
+// ====================
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadCustomers();
+    loadTechnicians();
+    loadJobs();
 });
