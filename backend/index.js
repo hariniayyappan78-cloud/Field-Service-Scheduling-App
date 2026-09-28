@@ -1,6 +1,5 @@
 const express = require("express");
-const cors = require("cors")
-app
+const cors = require("cors");
 const db = require("./database");
 
 const app = express();
@@ -9,22 +8,13 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
-
-// CORS
-app.use(cors());
-
-// JSON
-app.use(express.json());
-
-// Frontend files
 app.use(express.static("../"));
 
-// Home
 app.get("/", (req, res) => {
     res.send("Field Service Scheduling App Backend is Running!");
 });
 
-// ==================== CUSTOMERS ====================
+// CUSTOMERS
 
 app.post("/api/customers", (req, res) => {
     const { name, phone, address } = req.body;
@@ -45,7 +35,7 @@ app.get("/api/customers", (req, res) => {
     res.json(customers);
 });
 
-// ==================== TECHNICIANS ====================
+// TECHNICIANS
 
 app.post("/api/technicians", (req, res) => {
     const { name, skill } = req.body;
@@ -66,7 +56,7 @@ app.get("/api/technicians", (req, res) => {
     res.json(technicians);
 });
 
-// ==================== SERVICE JOBS ====================
+// SERVICE JOBS
 
 app.post("/api/jobs", (req, res) => {
     const { customer, service, date, technician, status } = req.body;
@@ -86,8 +76,6 @@ app.get("/api/jobs", (req, res) => {
     const jobs = db.prepare("SELECT * FROM jobs").all();
     res.json(jobs);
 });
-
-// ==================== START SERVER ====================
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
