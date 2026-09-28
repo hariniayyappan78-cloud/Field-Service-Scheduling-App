@@ -1,9 +1,19 @@
 const express = require("express");
+const cors = require("cors")
+app
 const db = require("./database");
 
 const app = express();
 const PORT = 3000;
 
+app.use(cors());
+app.use(express.json());
+
+
+// CORS
+app.use(cors());
+
+// JSON
 app.use(express.json());
 
 // Frontend files
